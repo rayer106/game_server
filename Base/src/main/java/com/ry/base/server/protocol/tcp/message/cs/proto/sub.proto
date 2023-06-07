@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "base.proto";
+
+package com.ry.base.server.protocol.tcp.message.cs.proto.impl;
+
+message LoginMessage {
+  extend BaseMessage {
+  }
+  string phone = 2;
+  string verifyCode = 3;
+}

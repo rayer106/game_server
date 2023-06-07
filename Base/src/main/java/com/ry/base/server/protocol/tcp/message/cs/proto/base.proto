@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.ry.base.server.protocol.tcp.message.cs.proto.impl;
+
+message BaseC2SMessage {
+  int32 messageId = 1;
+  int32 messageType = 2;
+  string token = 3;
+}
