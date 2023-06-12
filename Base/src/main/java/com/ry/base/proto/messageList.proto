@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.ry.base.proto.impl;
+
+option java_multiple_files = true;
+
+enum MessageID {
+  LoginReq = 0;
+  LoginResp = 1;
+  LogoutReq = 2;
+  LogoutResp = 3;
+  HeartBeatReq = 4;
+  HeartBeatResp = 5;
+  AppStatusReq = 6;
+  AppStatusResp = 7;
+}
+
+message LoginRequest {
+  string phone = 1;
+  string verifyCode = 2;
+}
+
+message AppStatusRequest {
+  int32 status = 1;
+}

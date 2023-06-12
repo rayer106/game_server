@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.ry.base.proto.impl;
+
+option java_multiple_files = true;
+
+enum MessageType {
+  Request = 0;
+  Response = 1;
+  Notify = 2;
+  Broadcast = 3;
+}

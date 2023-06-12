@@ -33,6 +33,33 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.92.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.23.2</version>
+        </dependency>
+        <!--
+            convert between protobuf and json:
+            JsonFormat.printer().print(pbOjbect);
+            JsonFormat.parser().merge(jsonStr, builder);
+        -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>3.23.2</version>
+        </dependency>
+        <!--
+            convert between pojo and json
+            new Gson().fromJson(jsonStr, Class);
+            new Gson().toJson(POJO);
+        -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

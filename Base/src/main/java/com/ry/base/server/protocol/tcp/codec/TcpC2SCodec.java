@@ -19,18 +19,18 @@ public class TcpC2SCodec extends ByteToMessageCodec<TcpS2CEntity> {
     //|4字节    |4字节 |4字节  |
     //===================================================================
     @Override
-    protected void encode(ChannelHandlerContext cxt, TcpS2CEntity tcpEntity, ByteBuf byteBuf) throws Exception {
+    protected void encode(ChannelHandlerContext cxt, TcpS2CEntity tcpEntity, ByteBuf out) throws Exception {
 
-        ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
+        //ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
         byte[] content = tcpEntity.getContent().getBytes(StandardCharsets.UTF_8);
         int length = 12 + content.length;
-        buf.writeInt(length);
-        buf.writeInt(tcpEntity.getHeader().getMessageId());
-        buf.writeInt(tcpEntity.getHeader().getMessageType());
-        buf.writeInt(content.length);
-        buf.writeBytes(content);
+        out.writeInt(length);
+        out.writeInt(tcpEntity.getHeader().getMessageId());
+        out.writeInt(tcpEntity.getHeader().getMessageType());
+        out.writeInt(content.length);
+        out.writeBytes(content);
 
-        cxt.writeAndFlush(buf);
+        cxt.writeAndFlush(out);
     }
 
     //===================================================================
@@ -38,29 +38,29 @@ public class TcpC2SCodec extends ByteToMessageCodec<TcpS2CEntity> {
     //|4字节    |4字节 |4字节  |4字节    |
     //===================================================================
     @Override
-    protected void decode(ChannelHandlerContext cxt, ByteBuf in, List<Object> list) throws Exception {
+    protected void decode(ChannelHandlerContext cxt, ByteBuf in, List<Object> out) throws Exception {
         i("TCPRequestDecoder:decode   1");
-        if (in.readableBytes() < TcpPacketConfig.HEADER_LENGTH) {
-            return;
-        }
-
-        i("TCPRequestDecoder:decode   2");
-        //标记一下当前读取数据的索引，如果下面不能继续则需要重置回当前
-        in.markReaderIndex();
-
-        //这里读取了data的长度，如果可读写字段不足，则等待下一次调用，如果字节数够了，则重新从头读取
-        int messageLength = in.readInt();
-        if (in.readableBytes() < messageLength) {
-            //剩余可读取的字节数不够组成content，则重置读取索引
-            in.resetReaderIndex();
-            return;
-        }
-
-        in.resetReaderIndex();
+//        if (in.readableBytes() < TcpPacketConfig.HEADER_LENGTH) {
+//            i("TCPRequestDecoder:decode   4");
+//            return;
+//        }
+//
+//        i("TCPRequestDecoder:decode   2");
+//        //标记一下当前读取数据的索引，如果下面不能继续则需要重置回当前
+//        in.markReaderIndex();
+//
+//        //这里读取了data的长度，如果可读写字段不足，则等待下一次调用，如果字节数够了，则重新从头读取
+//        int messageLength = in.readInt();
+//        if (in.readableBytes() < messageLength) {
+//            i("TCPRequestDecoder:decode   5");
+//            //剩余可读取的字节数不够组成content，则重置读取索引
+//            in.resetReaderIndex();
+//            return;
+//        }
 
         //TODO 读取Header的值
         TcpC2SEntity tcpEntity = new TcpC2SEntity();
-        tcpEntity.setLength(in.readInt());
+        //tcpEntity.setLength(messageLength);
         TcpC2SEntityHeader header = new TcpC2SEntityHeader();
         header.setMessageId(in.readInt());
         header.setMessageType(in.readInt());
@@ -69,19 +69,19 @@ public class TcpC2SCodec extends ByteToMessageCodec<TcpS2CEntity> {
         tcpEntity.setHeader(header);
 
         //TODO 验证TOKEN,如果TOKEN非法则关闭客户端连接，返回错误
-        i("TCPRequestDecoder:decode   3");
-        int dataLength = messageLength - 12 - tokenLength;
-        if (dataLength > 0) {//后面还有数据
-            byte[] data = new byte[dataLength];
-            in.readBytes(data);
-            tcpEntity.setContent(data);
+        //i("TCPRequestDecoder:decode   3");
+        //int dataLength = messageLength - 12 - tokenLength;
+        byte[] data = new byte[in.readableBytes()];
+        in.readBytes(data);
+        tcpEntity.setContent(data);
 
-            String dataStr = new String(data, StandardCharsets.UTF_8);
-            i("TCPRequestDecoder:decode   4," + dataStr);
-        }
+        String dataStr = new String(data, StandardCharsets.UTF_8);
+        i("TCPRequestDecoder:decode   2," + dataStr);
+
         //TODO 需要一个序列化和反序列化的框架，如：Protobuf
 
         //TODO 解析完成，把完整的消息交给下一个handler处理
-        cxt.fireChannelRead(tcpEntity);
+        out.add(tcpEntity);
+        //cxt.fireChannelRead(tcpEntity);
     }
 }

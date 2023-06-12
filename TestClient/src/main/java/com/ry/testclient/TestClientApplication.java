@@ -1,5 +1,6 @@
 package com.ry.testclient;
 
+import com.ry.base.proto.impl.Message;
 import com.ry.testclient.handler.TestEncoderHandler;
 import com.ry.testclient.handler.TestHandler;
 import io.netty.bootstrap.Bootstrap;
@@ -7,6 +8,10 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
@@ -25,7 +30,11 @@ public class TestClientApplication {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline()
-                                .addLast(new TestEncoderHandler())
+                                .addLast("ProtobufVarint32FrameDecoder", new ProtobufVarint32FrameDecoder())
+                                .addLast("ProtobufDecoder", new ProtobufDecoder(Message.getDefaultInstance()))
+                                .addLast("ProtobufVarint32LengthFieldPrepender", new ProtobufVarint32LengthFieldPrepender())
+                                .addLast("ProtobufEncoder", new ProtobufEncoder())
+                                //.addLast(new TestEncoderHandler())
                                 .addLast(new TestHandler());
                     }
                 });
