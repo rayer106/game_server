@@ -1,7 +1,10 @@
 package com.ry.testclient.handler;
 
 import com.ry.base.common.MsgSender;
-import com.ry.base.proto.impl.*;
+import com.ry.base.proto.impl.LoginRequest;
+import com.ry.base.proto.impl.Message;
+import com.ry.base.proto.impl.MessageID;
+import com.ry.base.proto.impl.MessageType;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

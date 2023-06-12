@@ -4,7 +4,6 @@ import com.ry.base.server.protocol.tcp.message.cs.TcpC2SEntity;
 import com.ry.base.server.protocol.tcp.message.cs.TcpC2SEntityHeader;
 import com.ry.base.server.protocol.tcp.message.cs.TcpS2CEntity;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
 

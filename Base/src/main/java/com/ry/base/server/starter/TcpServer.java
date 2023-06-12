@@ -1,8 +1,8 @@
 package com.ry.base.server.starter;
 
 import com.ry.base.MessageEvent;
-import com.ry.base.server.protocol.tcp.handler.TcpC2SInitializer;
 import com.ry.base.common.IInitializer;
+import com.ry.base.server.protocol.tcp.handler.TcpC2SInitializer;
 
 public class TcpServer extends Server {
 
